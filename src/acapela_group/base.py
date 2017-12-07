@@ -1,4 +1,5 @@
 """Base classes for Acapela Group website communication."""
+import re
 from urllib.parse import urlparse
 
 import requests
@@ -6,6 +7,10 @@ import requests
 
 class AcapelaGroupError(Exception):
     """Base exception class for Acapela Group related errors."""
+
+
+class TooManyInvalidLoginAttemptsError(AcapelaGroupError):
+    """Exception class thrown when locked out for too many login attempts."""
 
 
 class InvalidCredentialsError(AcapelaGroupError):
@@ -22,6 +27,8 @@ class NeedsUpdateError(AcapelaGroupError):
 
 class AcapelaGroup:
     """Client class for Acapela Group website interaction."""
+
+    _MP3_REGEX = re.compile(r"var myPhpVar = '(.+?)';")
 
     def __init__(self, base_url="http://www.acapela-group.com"):
         """Create an AcapelaGroup session handler."""
@@ -55,6 +62,91 @@ class AcapelaGroup:
         """
         return '{}/{}'.format(self._base_url, path)
 
+    def get_mp3_url(self, language, voice, text):
+        """Retrieve the mp3 url associated to the settings.
+
+        At the moment, the function is too harsh in that the expected arguments
+        are the ones that are sent through the HTTP request.
+
+        Args:
+            language (str): The language to use for the acapela.
+            voice (str): The voice name to use for the acapela.
+            text (str): the text to translate to speech.
+
+        Todo:
+            provide a better interface for arguments.
+
+        Raises:
+            NeedsUpdateError: The module needs an update since the mp3
+                url could not have been extracted, somehow.
+
+        Returns:
+            str: An HTTP url pointing to the generated mp3.
+        """
+
+        target = self.build_url(
+            "demo-tts/DemoHTML5Form_V2.php?langdemo=Powered+by+"
+            "<a+href=\"http://www.acapela-vaas.com\">Acapela+Vo"
+            "ice+as+a+Service</a>.+For+demo+and+evaluation+purp"
+            "ose+only,+for+commercial+use+of+generated+sound+fi"
+            "les+please+go+to+<a+href=\"http://www.acapela-box."
+            "com\">www.acapela-box.com</a>")
+
+        # What is that for?!
+        data = {
+            '0': 'Leila',
+            '1': 'Laia',
+            '2': 'Eliska',
+            '3': 'Mette',
+            '4': 'Zoe',
+            '5': 'Jasmijn',
+            '6': 'Tyler',
+            '7': 'Deepa',
+            '8': 'Rhona',
+            '9': 'Rachel',
+            '10': 'Sharon',
+            '11': 'Hanna',
+            '12': 'Sanna',
+            '13': 'Manon-be',
+            '14': 'Louise',
+            '16': 'Claudia',
+            '17': 'Dimitris',
+            '18': 'Fabiana',
+            '19': 'Sakura',
+            '20': 'Minji',
+            '21': 'Lulu',
+            '22': 'Bente',
+            '23': 'Ania',
+            '24': 'Marcia',
+            '25': 'Celia',
+            '26': 'Alyona',
+            '27': 'Biera',
+            '28': 'Ines',
+            '29': 'Rodrigo',
+            '30': 'Elin',
+            '31': 'Samuel',
+            '32': 'Kal',
+            '33': 'Mia',
+            '34': 'Ipek',
+
+            # Here this is clearer:
+            'MyLanguages': language,
+            'MySelectedVoice': voice,
+            'MyTextForTTS': text,
+            'agreeterms': 'on',
+            't': '1',  # Don't know about that one.
+            'SendToVaaS': '',
+        }
+
+        response = self._http_session.post(target, data=data)
+
+        results = self._MP3_REGEX.search(response.text)
+        if results is None:
+            raise NeedsUpdateError("Could not extract mp3 url pattern. "
+                                   "Check the language or the voice name.")
+
+        return results.group(1)
+
     def authenticate(self, username: str, password: str):
         """Authenticate against the website using `login` and `password`.
 
@@ -75,8 +167,7 @@ class AcapelaGroup:
                 is raised, then the authentication succeeded.
 
         Raises:
-            InvalidCredentialsError: if the authentication fails because of a
-                bad `login`/`password` combination.
+            AcapelaGroupError: something went wrong while authenticating.
         """
 
         data = {
@@ -89,14 +180,23 @@ class AcapelaGroup:
         response = self._http_session.post(self.build_url('wp-login.php'),
                                            allow_redirects=False,
                                            data=data)
+        if response.text == \
+                ("You have been locked out due to "
+                 "too many invalid login attempts."):
+            raise TooManyInvalidLoginAttemptsError(
+                "Looks like you are screwed because of too many login "
+                "attempts. Try with another IP maybe.")
+
         try:
             location = response.headers["Location"]
         except KeyError as exn:
             raise NeedsUpdateError(
-                "Could not get Location header from login.") from exn
+                "Could not get Location header from login. "
+                "The module might need an update.") from exn
         else:
             parse_result = urlparse(location)
 
             if parse_result.path == '/login/' and \
                     parse_result.query == 'the_error=incorrect_password':
-                raise InvalidCredentialsError("Could not authenticate.")
+                raise InvalidCredentialsError(
+                    "Wrong couple of login/password.")
