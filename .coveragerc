@@ -1,0 +1,14 @@
+[run]
+branch = True
+source = acapela_group
+
+[paths]
+source =
+    src/acapela_group
+    .tox/*/lib/python*/site-packages/acapela_group
+
+[report]
+;fail_under = 100
+show_missing = True
+exclude_lines =
+    if __name__ == .__main__.:
