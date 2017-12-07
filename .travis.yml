@@ -3,7 +3,7 @@ python:
     - "3.6"
 
 install:
-      pip install codecov tox-travis
+      pip install coveralls tox-travis
 
 script:
     - tox -e flake8
@@ -11,4 +11,4 @@ script:
     - tox -e py36
 after_success:
   - tox -e coverage-report
-  - codecov
+  - coveralls
