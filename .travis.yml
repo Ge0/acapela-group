@@ -1,0 +1,14 @@
+language: python
+python:
+    - "3.6"
+
+install:
+      pip install codecov tox-travis
+
+script:
+    - tox -e flake8
+    - tox -e isort
+    - tox -e py36
+after_success:
+  - tox -e coverage-report
+  - codecov
