@@ -1,11 +1,7 @@
 """Base classes for Acapela Group website communication."""
+from urllib.parse import urlparse
+
 import requests
-
-
-try:
-    from urllib.parse import urlparse  # Python3 standard module.
-except ImportError:
-    from urlparse import urlparse
 
 
 class AcapelaGroupError(Exception):
