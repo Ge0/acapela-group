@@ -19,6 +19,7 @@ CLASSIFIERS = [
 ]
 INSTALL_REQUIRES = [
     'click',
+    'requests',
 ]
 TESTS_REQUIRE = [
     'pytest',
