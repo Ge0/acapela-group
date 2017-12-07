@@ -1,5 +1,6 @@
 click
 coverage
 pytest
+requests
 sphinx
 sphinxcontrib-programoutput
