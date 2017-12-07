@@ -9,3 +9,7 @@ Acapela Group
 
 
 Still in progress. Stay tuned!
+
+At the moment, this package is only supported for python >= 3.6. Feel free
+to open a pull request to ask for previous version support if you are
+interested in the project!
