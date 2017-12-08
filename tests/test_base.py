@@ -53,5 +53,9 @@ def test_acapela_authenticate():
         with pytest.raises(NeedsUpdateError):
             acapela.authenticate("foo", "bar")
 
-        post_method.return_value = success_mock
-        acapela.authenticate("foo", "bar")  # Should run without any trouble!
+        with patch('requests.sessions.Session.get') as get_method:
+            post_method.return_value = success_mock
+            get_method.return_value = None  # Just mock the get() call.
+
+            # Should run without any trouble!
+            acapela.authenticate("foo", "bar")

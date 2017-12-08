@@ -200,3 +200,6 @@ class AcapelaGroup:
                     parse_result.query == 'the_error=incorrect_password':
                 raise InvalidCredentialsError(
                     "Wrong couple of login/password.")
+
+            # Go to the index to simulate the Location.
+            self._http_session.get(location)
