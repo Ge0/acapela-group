@@ -3,7 +3,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from acapela_group.base import (AcapelaGroup, InvalidCredentialsError,
-                                NeedsUpdateError)
+                                NeedsUpdateError,
+                                TooManyInvalidLoginAttemptsError)
 
 
 def test_acapela_group_init():
@@ -44,6 +45,10 @@ def test_acapela_authenticate():
         "Location": "http://www.acapela-group.com/"
     }
 
+    too_many_attempts_mock = MagicMock()
+    too_many_attempts_mock.text = ("You have been locked out due to "
+                                   "too many invalid login attempts.")
+
     with patch('requests.sessions.Session.post') as post_method:
         post_method.return_value = invalid_credentials_mock
         with pytest.raises(InvalidCredentialsError):
@@ -51,6 +56,10 @@ def test_acapela_authenticate():
 
         post_method.return_value = needs_update_credentials_mock
         with pytest.raises(NeedsUpdateError):
+            acapela.authenticate("foo", "bar")
+
+        post_method.return_value = too_many_attempts_mock
+        with pytest.raises(TooManyInvalidLoginAttemptsError):
             acapela.authenticate("foo", "bar")
 
         with patch('requests.sessions.Session.get') as get_method:
