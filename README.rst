@@ -40,7 +40,7 @@ Or as a library:
 
 .. code-block:: python
 
-    from acapela_group.base import AcapelaGroup
+	from acapela_group.base import AcapelaGroup
 
 	acapela_group = AcapelaGroup()
 	# Optional: you can authenticate against the website, so the generated
