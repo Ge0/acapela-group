@@ -13,7 +13,6 @@ from .base import AcapelaGroup, AcapelaGroupError
 @click.option("--password", help="Acapela Group password (if authenticating).")
 def main(language, voice, text, username=None, password=None):
     """Fetch generated tts sounds from Acapela Group."""
-    click.echo("Use acapela_group as a library!")
     acapela_group = AcapelaGroup()
 
     # The two options must be provided together.
