@@ -73,8 +73,8 @@ class AcapelaGroup:
             voice (str): The voice name to use for the acapela.
             text (str): the text to translate to speech.
 
-        Todo:
-            provide a better interface for arguments.
+        Warnings:
+            Provide a better interface for arguments.
 
         Raises:
             NeedsUpdateError: The module needs an update since the mp3
