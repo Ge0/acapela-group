@@ -59,3 +59,23 @@ def test_acapela_authenticate():
 
             # Should run without any trouble!
             acapela.authenticate("foo", "bar")
+
+
+def test_get_mp3_url():
+    """Test the `get_mp3_url` method of the `AcapelaGroup` class."""
+    acapela = AcapelaGroup()
+
+    mp3_url_mock = MagicMock()
+    mp3_url_mock.text = "var myPhpVar = 'http://site.com/path/to/file.mp3';"
+
+    no_mp3_url_mock = MagicMock()
+    no_mp3_url_mock.text = "<dumb>lol</dumb>"
+
+    with patch('requests.sessions.Session.post') as post_method:
+        post_method.return_value = mp3_url_mock
+        assert acapela.get_mp3_url('foo', 'bar', 'baz') == \
+            "http://site.com/path/to/file.mp3"
+
+        post_method.return_value = no_mp3_url_mock
+        with pytest.raises(NeedsUpdateError):
+            acapela.get_mp3_url('foo', 'bar', 'baz')
