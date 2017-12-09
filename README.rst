@@ -49,7 +49,7 @@ Or as a library:
 
 	print(acapela_group.get_mp3_url('sonid15',
 	                                'AntoineFromAfar (emotive voice)',
-	                                'Tout ça à cause de Sloman')
+	                                'Tout ça à cause de Sloman'))
 
 
 
