@@ -4,6 +4,8 @@ from urllib.parse import urlparse
 
 import requests
 
+from .language import LANGUAGES
+
 
 class AcapelaGroupError(Exception):
     """Base exception class for Acapela Group related errors."""
@@ -22,6 +24,13 @@ class NeedsUpdateError(AcapelaGroupError):
 
     Basically, it means that the module needs some update to keep interfacing
     with the Acapela Group website.
+    """
+
+
+class LanguageNotSupportedError(AcapelaGroupError):
+    """Exception class thrown when the language is not supported.
+
+    For a complete list of supported languages, see language.py.
     """
 
 
@@ -65,8 +74,7 @@ class AcapelaGroup:
     def get_mp3_url(self, language, voice, text):
         """Retrieve the mp3 url associated to the settings.
 
-        At the moment, the function is too harsh in that the expected arguments
-        are the ones that are sent through the HTTP request.
+        To see the list of supported languages, check the `language` module.
 
         Args:
             language (str): The language to use for the acapela.
@@ -83,6 +91,12 @@ class AcapelaGroup:
         Returns:
             str: An HTTP url pointing to the generated mp3.
         """
+
+        try:
+            language_code = LANGUAGES[language.upper()]
+        except KeyError:
+            raise LanguageNotSupportedError(
+                "The language {} is not supported.".format(language))
 
         target = self.build_url(
             "demo-tts/DemoHTML5Form_V2.php?langdemo=Powered+by+"
@@ -130,7 +144,7 @@ class AcapelaGroup:
             '34': 'Ipek',
 
             # Here this is clearer:
-            'MyLanguages': language,
+            'MyLanguages': language_code,
             'MySelectedVoice': voice,
             'MyTextForTTS': text,
             'agreeterms': 'on',

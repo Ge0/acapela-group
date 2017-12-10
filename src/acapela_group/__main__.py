@@ -24,14 +24,14 @@ def main(language, voice, text, username=None, password=None):
     else:
         do_authenticate = username is not None and password is not None
 
-    if do_authenticate:
-        try:
+    try:
+        if do_authenticate:
             acapela_group.authenticate(username, password)
-        except AcapelaGroupError as exn:
-            click.secho(str(exn), fg='red')
-            raise SystemExit(-2)
 
-    click.echo(acapela_group.get_mp3_url(language, voice, text))
+        click.echo(acapela_group.get_mp3_url(language, voice, text))
+    except AcapelaGroupError as exn:
+        click.secho(str(exn), fg='red')
+        raise SystemExit(-2)
 
 
 if __name__ == '__main__':

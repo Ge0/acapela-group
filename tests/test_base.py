@@ -82,9 +82,9 @@ def test_get_mp3_url():
 
     with patch('requests.sessions.Session.post') as post_method:
         post_method.return_value = mp3_url_mock
-        assert acapela.get_mp3_url('foo', 'bar', 'baz') == \
+        assert acapela.get_mp3_url('french (france)', 'bar', 'baz') == \
             "http://site.com/path/to/file.mp3"
 
         post_method.return_value = no_mp3_url_mock
         with pytest.raises(NeedsUpdateError):
-            acapela.get_mp3_url('foo', 'bar', 'baz')
+            acapela.get_mp3_url('french (france)', 'bar', 'baz')
