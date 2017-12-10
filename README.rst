@@ -1,6 +1,10 @@
 Acapela Group
 =============
 
+Acapela Group is a python module that lets you extract text-to-speech
+generated mp3 urls from http://www.acapela-group with the provided parameters
+such as language, selected voice and text.
+
 .. image:: https://travis-ci.org/Ge0/acapela-group.svg?branch=master
     :target: https://travis-ci.org/Ge0/acapela-group
 
