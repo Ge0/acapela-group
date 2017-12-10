@@ -47,7 +47,7 @@ Or as a library:
     # sounds won't have that stupid background music spoiling everything.
     acapela_group.authenticate('username', 'password')
 
-    print(acapela_group.get_mp3_url('sonid15',
+    print(acapela_group.get_mp3_url('French (France)',
                                     'AntoineFromAfar (emotive voice)',
                                     'Tout ça à cause de Sloman'))
 
