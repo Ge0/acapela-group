@@ -8,8 +8,8 @@ Acapela Group
     :target: https://coveralls.io/github/Ge0/acapela-group?branch=master
 
 Acapela Group is a python module that lets you extract text-to-speech
-generated mp3 urls from http://www.acapela-group with the provided parameters
-such as language, selected voice and text.
+generated mp3 urls from http://www.acapela-group.com with the provided
+parameters such as language, selected voice and text.
 
 At the moment, this package is only supported for python >= 3.6. Feel free
 to open a pull request to ask for previous version support if you are
