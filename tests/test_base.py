@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from acapela_group.base import (AcapelaGroup, InvalidCredentialsError,
+                                LanguageNotSupportedError,
                                 NeedsUpdateError,
                                 TooManyInvalidLoginAttemptsError)
 
@@ -88,3 +89,8 @@ def test_get_mp3_url():
         post_method.return_value = no_mp3_url_mock
         with pytest.raises(NeedsUpdateError):
             acapela.get_mp3_url('french (france)', 'bar', 'baz')
+
+    # Test with an invalid language
+    with pytest.raises(LanguageNotSupportedError) as exn:
+        acapela.get_mp3_url('Unexisting language', 'bar', 'foo')
+    assert 'The language Unexisting language is not supported.' in str(exn)
