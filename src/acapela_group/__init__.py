@@ -11,8 +11,3 @@ __author__ = 'Geoffrey ROYER'
 __email__ = 'geoffrey.royer@gmail.com'
 
 __copyright__ = '2017, Geoffrey ROYER'
-
-
-def hello():
-    """Return a welcome message."""
-    return 'Hello world!'
