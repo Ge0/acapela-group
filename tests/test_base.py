@@ -3,8 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from acapela_group.base import (AcapelaGroup, InvalidCredentialsError,
-                                LanguageNotSupportedError,
-                                NeedsUpdateError,
+                                LanguageNotSupportedError, NeedsUpdateError,
                                 TooManyInvalidLoginAttemptsError)
 
 
