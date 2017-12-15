@@ -68,6 +68,7 @@ class AcapelaGroup:
 
         Returns:
             str: Build url.
+
         """
         return '{}/{}'.format(self._base_url, path)
 
@@ -90,8 +91,8 @@ class AcapelaGroup:
 
         Returns:
             str: An HTTP url pointing to the generated mp3.
-        """
 
+        """
         try:
             language_code = LANGUAGES[language.upper()]
         except KeyError:
@@ -182,8 +183,8 @@ class AcapelaGroup:
 
         Raises:
             AcapelaGroupError: something went wrong while authenticating.
-        """
 
+        """
         data = {
             'log': username,
             'pwd': password,
