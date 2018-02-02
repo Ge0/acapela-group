@@ -1,6 +1,8 @@
+aiohttp
 click
 coverage
 pytest
+pytest-asyncio
 requests
 sphinx
 sphinxcontrib-programoutput
