@@ -7,6 +7,8 @@ import requests
 
 from .language import LANGUAGES
 
+_MP3_REGEX = re.compile(r"var myPhpVar = '(.+?)';")
+
 
 class AcapelaGroupError(Exception):
     """Base exception class for Acapela Group related errors."""
@@ -220,7 +222,7 @@ class AcapelaGroupAsync:
 
         response = await self._http_session.post(target, data=data)
 
-        results = self._MP3_REGEX.search(response.text)
+        results = _MP3_REGEX.search(response.text)
         if results is None:
             raise NeedsUpdateError("Could not extract mp3 url pattern. "
                                    "Check the language or the voice name.")
@@ -230,8 +232,6 @@ class AcapelaGroupAsync:
 
 class AcapelaGroup:
     """Client class for Acapela Group website interaction."""
-
-    _MP3_REGEX = re.compile(r"var myPhpVar = '(.+?)';")
 
     def __init__(self, base_url="http://www.acapela-group.com"):
         """Create an AcapelaGroup session handler."""
@@ -346,7 +346,7 @@ class AcapelaGroup:
 
         response = self._http_session.post(target, data=data)
 
-        results = self._MP3_REGEX.search(response.text)
+        results = _MP3_REGEX.search(response.text)
         if results is None:
             raise NeedsUpdateError("Could not extract mp3 url pattern. "
                                    "Check the language or the voice name.")
