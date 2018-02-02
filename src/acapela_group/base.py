@@ -221,8 +221,8 @@ class AcapelaGroupAsync:
         }
 
         response = await self._http_session.post(target, data=data)
-
-        results = _MP3_REGEX.search(response.text)
+        text = await response.text()
+        results = _MP3_REGEX.search(text)
         if results is None:
             raise NeedsUpdateError("Could not extract mp3 url pattern. "
                                    "Check the language or the voice name.")
